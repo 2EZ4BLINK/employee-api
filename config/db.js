@@ -16,6 +16,7 @@ const pool = mysql.createPool({
 // The credentials are correct.
 // The database exists.
 // The application can connect.
+
 pool.getConnection((err, connection) => {
   if (err) {
     console.error("Database connection failed: ", err.message);
