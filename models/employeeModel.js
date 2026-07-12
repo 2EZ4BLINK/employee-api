@@ -20,7 +20,7 @@ const createEmployee = async (employee) => {
   const [result] = await pool.promise().query(
     ` INSERT INTO employees
          (first_name, last_name, email, department, salary)
-         VALUE ( ?,?,?,?,?)
+         VALUES ( ?,?,?,?,?)
        `,
     [first_name, last_name, email, department, salary],
   );
