@@ -41,4 +41,18 @@ const updateEmployee = async (id, body) => {
   return data;
 };
 
-export { getAllEmployees, getEmployeeById, createEmployee, updateEmployee };
+const deleteEmployee = async (id) => {
+  const [result] = await pool
+    .promise()
+    .query("DELETE FROM employees WHERE id = ?", [id]);
+
+  return result;
+};
+
+export {
+  getAllEmployees,
+  getEmployeeById,
+  createEmployee,
+  updateEmployee,
+  deleteEmployee,
+};

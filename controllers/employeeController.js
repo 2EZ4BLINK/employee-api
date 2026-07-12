@@ -3,6 +3,7 @@ import {
   getAllEmployees,
   createEmployee,
   updateEmployee,
+  deleteEmployee,
 } from "../models/employeeModel.js";
 
 const fetchEmployees = async (req, res) => {
@@ -74,4 +75,31 @@ const putEmployee = async (req, res) => {
   }
 };
 
-export { fetchEmployees, fetchEmployeeById, postEmployee, putEmployee };
+const removeEmployee = async (req, res) => {
+  try {
+    const employeeId = req.params.id;
+    const result = await deleteEmployee(employeeId);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: "Employee doesn't exist",
+      });
+    }
+
+    res.status(200).json({
+      message: "Employee deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong.",
+    });
+  }
+};
+
+export {
+  fetchEmployees,
+  fetchEmployeeById,
+  postEmployee,
+  putEmployee,
+  removeEmployee,
+};
