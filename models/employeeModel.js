@@ -20,7 +20,7 @@ const createEmployee = async (employee) => {
   const [result] = await pool.promise().query(
     `INSERT INTO employees
          (first_name, last_name, email, department, salary)
-         VALUES ( ?,?,?,?,?)
+         VALUES (?,?,?,?,?)
        `,
     [first_name, last_name, email, department, salary],
   );
@@ -28,4 +28,17 @@ const createEmployee = async (employee) => {
   return result;
 };
 
-export { getAllEmployees, getEmployeeById, createEmployee };
+const updateEmployee = async (id, body) => {
+  const { first_name, last_name, email, department, salary } = body;
+
+  const [data] = await pool
+    .promise()
+    .query(
+      "UPDATE employees SET first_name = ?, last_name = ?, email = ?, department = ?, salary = ? WHERE id = ?",
+      [first_name, last_name, email, department, salary, id],
+    );
+
+  return data;
+};
+
+export { getAllEmployees, getEmployeeById, createEmployee, updateEmployee };

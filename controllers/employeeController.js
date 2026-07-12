@@ -2,6 +2,7 @@ import {
   getEmployeeById,
   getAllEmployees,
   createEmployee,
+  updateEmployee,
 } from "../models/employeeModel.js";
 
 const fetchEmployees = async (req, res) => {
@@ -27,7 +28,7 @@ const fetchEmployeeById = async (req, res) => {
       });
     }
 
-    res.json(employees);
+    res.json(employees[0]);
   } catch (error) {
     res.status(500).json({
       message: "Something went wrong.",
@@ -50,4 +51,27 @@ const postEmployee = async (req, res) => {
   }
 };
 
-export { fetchEmployees, fetchEmployeeById, postEmployee };
+const putEmployee = async (req, res) => {
+  try {
+    const employeeId = req.params.id;
+    const body = req.body;
+
+    const result = await updateEmployee(employeeId, body);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: "Employee not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Employee updated successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: `Error: ${error}`,
+    });
+  }
+};
+
+export { fetchEmployees, fetchEmployeeById, postEmployee, putEmployee };
