@@ -6,4 +6,12 @@ const getAllEmployees = async () => {
   return rows;
 };
 
-export { getAllEmployees };
+const getEmployeeById = async (employeeId) => {
+  const [rows] = await pool
+    .promise()
+    .query(`SELECT * FROM employees WHERE id = ?`, [employeeId]);
+
+  return rows;
+};
+
+export { getAllEmployees, getEmployeeById };

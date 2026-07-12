@@ -1,5 +1,8 @@
 import express from "express";
-import { fetchEmployees } from "../controllers/employeeController.js";
+import {
+  fetchEmployeeById,
+  fetchEmployees,
+} from "../controllers/employeeController.js";
 
 const router = express.Router();
 
@@ -8,5 +11,6 @@ router.get("/", (req, res) => {
 });
 
 router.get("/employees", fetchEmployees);
+router.get("/employees/:id", fetchEmployeeById);
 
 export default router;
