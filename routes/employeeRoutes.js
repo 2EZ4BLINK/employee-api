@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  postEmployee,
   fetchEmployeeById,
   fetchEmployees,
 } from "../controllers/employeeController.js";
@@ -12,5 +13,7 @@ router.get("/", (req, res) => {
 
 router.get("/employees", fetchEmployees);
 router.get("/employees/:id", fetchEmployeeById);
+
+router.post("/employees", postEmployee);
 
 export default router;

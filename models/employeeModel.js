@@ -14,4 +14,18 @@ const getEmployeeById = async (employeeId) => {
   return rows;
 };
 
-export { getAllEmployees, getEmployeeById };
+const createEmployee = async (employee) => {
+  const { first_name, last_name, email, department, salary } = employee;
+
+  const [result] = await pool.promise().query(
+    ` INSERT INTO employees
+         (first_name, last_name, email, department, salary)
+         VALUE ( ?,?,?,?,?)
+       `,
+    [first_name, last_name, email, department, salary],
+  );
+
+  return result;
+};
+
+export { getAllEmployees, getEmployeeById, createEmployee };
