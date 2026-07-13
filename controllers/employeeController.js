@@ -20,8 +20,8 @@ const fetchEmployees = async (req, res) => {
 
 const fetchEmployeeById = async (req, res) => {
   try {
-    const employeeId = req.params.id;
-    const employees = await getEmployeeById(employeeId);
+    const { id } = req.params;
+    const employees = await getEmployeeById(id);
 
     if (employees.length === 0) {
       return res.status(404).json({
@@ -54,10 +54,10 @@ const postEmployee = async (req, res) => {
 
 const putEmployee = async (req, res) => {
   try {
-    const employeeId = req.params.id;
+    const { id } = req.params;
     const body = req.body;
 
-    const result = await updateEmployee(employeeId, body);
+    const result = await updateEmployee(id, body);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({
@@ -70,15 +70,15 @@ const putEmployee = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: `Error: ${error}`,
+      message: "Something went wrong.",
     });
   }
 };
 
 const removeEmployee = async (req, res) => {
   try {
-    const employeeId = req.params.id;
-    const result = await deleteEmployee(employeeId);
+    const { id } = req.params;
+    const result = await deleteEmployee(id);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({
