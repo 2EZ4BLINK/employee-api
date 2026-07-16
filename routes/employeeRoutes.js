@@ -6,6 +6,8 @@ import {
   putEmployee,
   removeEmployee,
 } from "../controllers/employeeController.js";
+import { logger } from "../middleware/logger.js";
+import { validateEmployee } from "../middleware/validateEmployee.js";
 
 const router = express.Router();
 
@@ -15,7 +17,7 @@ router.get("/", (req, res) => {
 router.get("/employees", fetchEmployees);
 router.get("/employees/:id", fetchEmployeeById);
 
-router.post("/employees", postEmployee);
+router.post("/employees", validateEmployee, postEmployee);
 router.put("/employees/:id", putEmployee);
 router.delete("/employees/:id", removeEmployee);
 

@@ -40,44 +40,14 @@ const fetchEmployeeById = async (req, res) => {
 const postEmployee = async (req, res) => {
   try {
     const { first_name, last_name, email, department, salary } = req.body;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const trimmedFirstName = first_name.trim();
-    const trimmedLastName = last_name.trim();
-    const trimmedEmail = email.trim();
-    const trimmedDepartment = department.trim();
-    const convertedSalary = Number(salary);
 
     const employeeData = {
-      first_name: trimmedFirstName,
-      last_name: trimmedLastName,
-      email: trimmedEmail,
-      department: trimmedDepartment,
-      salary: convertedSalary,
+      first_name,
+      last_name,
+      email,
+      department,
+      salary,
     };
-
-    if (
-      !trimmedFirstName ||
-      !trimmedLastName ||
-      !trimmedEmail ||
-      !trimmedDepartment ||
-      salary == null
-    ) {
-      return res.status(400).json({
-        message: "All fields are required.",
-      });
-    }
-
-    if (!emailRegex.test(trimmedEmail)) {
-      return res.status(400).json({
-        message: "Invalid email format.",
-      });
-    }
-
-    if (Number.isNaN(convertedSalary) || convertedSalary <= 0) {
-      return res.status(400).json({
-        message: "Salary must be a positive number.",
-      });
-    }
 
     const result = await createEmployee(employeeData);
 
@@ -88,6 +58,7 @@ const postEmployee = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Something went wrong.",
+      // message: `${error}`,
     });
   }
 };
