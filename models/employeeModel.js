@@ -1,7 +1,7 @@
 import pool from "../config/db.js";
 
 const getAllEmployees = async () => {
-  const [rows] = await pool.promise().query("SELECT * FROM employees");
+  const [rows] = await pool.promise().query("SELECT * FROM employes");
 
   return rows;
 };
@@ -31,14 +31,14 @@ const createEmployee = async (employee) => {
 const updateEmployee = async (id, body) => {
   const { first_name, last_name, email, department, salary } = body;
 
-  const [data] = await pool
+  const [result] = await pool
     .promise()
     .query(
       "UPDATE employees SET first_name = ?, last_name = ?, email = ?, department = ?, salary = ? WHERE id = ?",
       [first_name, last_name, email, department, salary, id],
     );
 
-  return data;
+  return result;
 };
 
 const deleteEmployee = async (id) => {

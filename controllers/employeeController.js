@@ -6,19 +6,17 @@ import {
   deleteEmployee,
 } from "../models/employeeModel.js";
 
-const fetchEmployees = async (req, res) => {
+const fetchEmployees = async (req, res, next) => {
   try {
     const employees = await getAllEmployees();
-
     res.json(employees);
   } catch (error) {
-    res.status(500).json({
-      message: "Something went wrong.",
-    });
+    console.error(error);
+    next({ message: "Failed getting employees" });
   }
 };
 
-const fetchEmployeeById = async (req, res) => {
+const fetchEmployeeById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const employees = await getEmployeeById(id);
@@ -31,13 +29,12 @@ const fetchEmployeeById = async (req, res) => {
 
     res.json(employees[0]);
   } catch (error) {
-    res.status(500).json({
-      message: "Something went wrong.",
-    });
+    console.error(error);
+    next({ message: "Failed getting employee" });
   }
 };
 
-const postEmployee = async (req, res) => {
+const postEmployee = async (req, res, next) => {
   try {
     const { first_name, last_name, email, department, salary } = req.body;
 
@@ -56,14 +53,12 @@ const postEmployee = async (req, res) => {
       id: result.insertId,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Something went wrong.",
-      // message: `${error}`,
-    });
+    console.error(error);
+    next({ message: "Failed creating employee" });
   }
 };
 
-const putEmployee = async (req, res) => {
+const putEmployee = async (req, res, next) => {
   try {
     const { id } = req.params;
     const body = req.body;
@@ -80,13 +75,12 @@ const putEmployee = async (req, res) => {
       message: "Employee updated successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Something went wrong.",
-    });
+    console.error(error);
+    next({ message: "Failed updating employee" });
   }
 };
 
-const removeEmployee = async (req, res) => {
+const removeEmployee = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await deleteEmployee(id);
@@ -101,9 +95,8 @@ const removeEmployee = async (req, res) => {
       message: "Employee deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Something went wrong.",
-    });
+    console.error(error);
+    next({ message: "Failed deleting employee" });
   }
 };
 
