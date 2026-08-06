@@ -1,4 +1,4 @@
-import { createUser } from "../models/userModel.js";
+import { createUser, getUser } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 
 const postUser = async (req, res, next) => {
@@ -15,10 +15,9 @@ const postUser = async (req, res, next) => {
     const result = await createUser(userData);
 
     if (result.affectedRows == 0) {
-      res.status(500).json({
+      return res.status(500).json({
         message: "Something went wrong",
       });
-      return;
     }
 
     res.status(201).json({
@@ -30,4 +29,23 @@ const postUser = async (req, res, next) => {
   }
 };
 
-export { postUser };
+const fetchUserByEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const user = await getUser(email);
+
+    if (user.length === 0) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.json(user[0]);
+  } catch (error) {
+    console.error(error);
+    next({ message: "Failed getting user" });
+  }
+};
+
+export { postUser, fetchUserByEmail };

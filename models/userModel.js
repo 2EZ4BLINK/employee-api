@@ -12,4 +12,12 @@ const createUser = async (body) => {
   return result;
 };
 
-export { createUser };
+const getUser = async (email) => {
+  const [rows] = await pool.query(`SELECT * FROM users WHERE email = ?`, [
+    email,
+  ]);
+
+  return rows;
+};
+
+export { createUser, getUser };
