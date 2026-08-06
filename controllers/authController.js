@@ -1,4 +1,4 @@
-import { createUser, getUser } from "../models/userModel.js";
+import { createUser, findUserByEmail } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 
 const postUser = async (req, res, next) => {
@@ -29,23 +29,33 @@ const postUser = async (req, res, next) => {
   }
 };
 
-const fetchUserByEmail = async (req, res, next) => {
+const loginUser = async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
 
-    const user = await getUser(email);
+    const user = await findUserByEmail(email);
 
-    if (user.length === 0) {
+    if (!user) {
       return res.status(404).json({
         message: "User not found",
       });
     }
 
-    res.json(user[0]);
+    const isMatched = await bcrypt.compare(password, user.password);
+
+    if (!isMatched) {
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Login successful",
+    });
   } catch (error) {
     console.error(error);
-    next({ message: "Failed getting user" });
+    next({ message: "Failed logging in" });
   }
 };
 
-export { postUser, fetchUserByEmail };
+export { postUser, loginUser };
