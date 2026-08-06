@@ -29,3 +29,5 @@ const postUser = async (req, res, next) => {
     next({ message: "Failed creating user" });
   }
 };
+
+export { postUser };

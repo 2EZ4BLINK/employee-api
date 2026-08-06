@@ -10,14 +10,11 @@ import { validateEmployee } from "../middleware/validateEmployee.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("<h1>Hello World</h1>");
-});
-router.get("/employees", fetchEmployees);
-router.get("/employees/:id", fetchEmployeeById);
+router.get("/", fetchEmployees);
+router.get("/:id", fetchEmployeeById);
 
-router.post("/employees", validateEmployee, postEmployee);
-router.put("/employees/:id", validateEmployee, putEmployee);
-router.delete("/employees/:id", removeEmployee);
+router.post("/", validateEmployee, postEmployee);
+router.put("/:id", validateEmployee, putEmployee);
+router.delete("/:id", removeEmployee);
 
 export default router;
