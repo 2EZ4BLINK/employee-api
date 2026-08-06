@@ -1,9 +1,10 @@
-import { createUser } from "../models/userModel";
+import { createUser } from "../models/userModel.js";
+import bcrypt from "bcrypt";
 
 const postUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    const hashedPassword = "";
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const userData = {
       name,
@@ -15,7 +16,7 @@ const postUser = async (req, res, next) => {
 
     if (result.affectedRows == 0) {
       res.status(500).json({
-        messgae: "Something went wrong",
+        message: "Something went wrong",
       });
       return;
     }
