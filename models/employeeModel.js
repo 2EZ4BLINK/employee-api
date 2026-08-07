@@ -11,7 +11,7 @@ const getEmployeeById = async (employeeId) => {
     employeeId,
   ]);
 
-  return rows;
+  return rows[0];
 };
 
 const createEmployee = async (employee) => {

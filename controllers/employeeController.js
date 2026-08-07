@@ -27,7 +27,7 @@ const fetchEmployeeById = async (req, res, next) => {
       });
     }
 
-    res.json(employees[0]);
+    res.json(employees);
   } catch (error) {
     console.error(error);
     next({ message: "Failed getting employee" });
