@@ -1,11 +1,9 @@
 import express from "express";
-import dotenv from "dotenv";
-import employeeRoutes from "./routes/employeeRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
-import { errorHandler } from "./middleware/errorHandler.js";
-import { notFound } from "./middleware/notFound.js";
 
-dotenv.config();
+import authRoutes from "./routes/authRoutes.js";
+import { notFound } from "./middleware/notFound.js";
+import employeeRoutes from "./routes/employeeRoutes.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
