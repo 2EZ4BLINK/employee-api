@@ -1,5 +1,7 @@
-import { createUser, findUserByEmail } from "../models/userModel.js";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+
+import { createUser, findUserByEmail } from "../models/userModel.js";
 
 const postUser = async (req, res, next) => {
   try {
@@ -49,8 +51,21 @@ const loginUser = async (req, res, next) => {
       });
     }
 
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "5m",
+      },
+    );
+
     return res.status(200).json({
       message: "Login successful",
+      token,
     });
   } catch (error) {
     console.error(error);
