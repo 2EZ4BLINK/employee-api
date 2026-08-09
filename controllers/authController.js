@@ -6,6 +6,13 @@ import { createUser, findUserByEmail } from "../models/userModel.js";
 const postUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
+    const userEmail = await findUserByEmail(email);
+
+    if (userEmail)
+      return res.status(409).json({
+        message: "Email already exists",
+      });
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userData = {

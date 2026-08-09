@@ -1,6 +1,4 @@
 export const authorize = (role) => {
-  console.log("role: ", role);
-
   return (req, res, next) => {
     if (req.user.role !== role) {
       return next({
