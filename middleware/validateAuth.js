@@ -1,5 +1,6 @@
 export const validateSignup = (req, res, next) => {
   const { name, email, password } = req.body;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const trimmedName = name?.trim();
   const trimmedEmail = email?.trim();
 
@@ -15,6 +16,12 @@ export const validateSignup = (req, res, next) => {
     return res.status(400).json({
       message: "Email is required",
     });
+
+  if (!emailRegex.test(trimmedEmail)) {
+    return res.status(400).json({
+      message: "Invalid email format.",
+    });
+  }
 
   if (!password)
     return res.status(400).json({
