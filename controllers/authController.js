@@ -93,12 +93,57 @@ const loginUser = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next({ message: "Failed logging in" });
+    next({
+      status: 500,
+      message: "Failed logging in",
+    });
   }
 };
 
-export const refreshAccessToken = (req, res, next) => {
-  const refreshToken = req.cookies.refreshToken;
+export const refreshAccessToken = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: "No refresh token",
+      });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+    const user = await findUserById(decoded.id);
+
+    if (!user) {
+      return res.status(401).json({
+        message: "User no longer exists",
+      });
+    }
+
+    const accessToken = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_ACCESS_SECRET,
+      {
+        expiresIn: "5m",
+      },
+    );
+
+    return res.status(200).json({
+      message: "New token created",
+      accessToken,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return next({
+      status: 401,
+      message: "Invalid or expired refresh token",
+    });
+  }
 };
 
 export { postUser, loginUser };

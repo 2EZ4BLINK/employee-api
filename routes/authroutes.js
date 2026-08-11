@@ -6,6 +6,7 @@ import {
 } from "../controllers/authController.js";
 import { fetchEmployeeById } from "../controllers/employeeController.js";
 import { validateLogin, validateSignup } from "../middleware/validateAuth.js";
+import { findUserById } from "../models/userModel.js";
 
 const router = express.Router();
 
