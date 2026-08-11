@@ -97,4 +97,8 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+export const refreshAccessToken = (req, res, next) => {
+  const refreshToken = req.cookies.refreshToken;
+};
+
 export { postUser, loginUser };
