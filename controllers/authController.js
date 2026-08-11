@@ -38,7 +38,10 @@ const postUser = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next({ message: "Failed creating user" });
+    next({
+      status: 500,
+      message: "Failed creating user",
+    });
   }
 };
 
@@ -104,7 +107,7 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-export const refreshAccessToken = async (req, res, next) => {
+const refreshAccessToken = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
 
@@ -150,4 +153,16 @@ export const refreshAccessToken = async (req, res, next) => {
   }
 };
 
-export { postUser, loginUser };
+const logoutUser = (req, res) => {
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  return res.status(200).json({
+    message: "Logout successful",
+  });
+};
+
+export { postUser, loginUser, refreshAccessToken, logoutUser };
