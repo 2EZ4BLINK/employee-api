@@ -1,7 +1,11 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-import { createUser, findUserByEmail } from "../models/userModel.js";
+import {
+  createUser,
+  findUserByEmail,
+  findUserById,
+} from "../models/userModel.js";
 
 const postUser = async (req, res, next) => {
   try {
