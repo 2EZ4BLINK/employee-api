@@ -146,9 +146,19 @@ const refreshAccessToken = async (req, res, next) => {
   } catch (error) {
     console.error(error);
 
+    if (
+      error.name === "JsonWebTokenError" ||
+      error.name === "TokenExpiredError"
+    ) {
+      return next({
+        status: 401,
+        message: "Invalid or expired refresh token",
+      });
+    }
+
     return next({
-      status: 401,
-      message: "Invalid or expired refresh token",
+      status: 500,
+      message: "Failed creating new access token",
     });
   }
 };
