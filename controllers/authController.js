@@ -7,6 +7,7 @@ import {
   findUserById,
 } from "../models/userModel.js";
 import { generateAccessToken } from "../utils/token.js";
+import { refreshCookieOptions } from "../utils/cookieOptions.js";
 
 const postUser = async (req, res, next) => {
   try {
@@ -79,9 +80,7 @@ const loginUser = async (req, res, next) => {
     );
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      ...refreshCookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -145,11 +144,7 @@ const refreshAccessToken = async (req, res, next) => {
 };
 
 const logoutUser = (req, res) => {
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
+  res.clearCookie("refreshToken", refreshCookieOptions);
 
   return res.status(200).json({
     message: "Logout successful",
