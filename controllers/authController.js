@@ -6,7 +6,7 @@ import {
   findUserByEmail,
   findUserById,
 } from "../models/userModel.js";
-import { generateAccessToken } from "../utils/token.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/token.js";
 import { refreshCookieOptions } from "../utils/cookieOptions.js";
 
 const postUser = async (req, res, next) => {
@@ -41,7 +41,6 @@ const postUser = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     next({
-      status: 500,
       message: "Failed creating user",
     });
   }
@@ -69,15 +68,7 @@ const loginUser = async (req, res, next) => {
 
     const accessToken = generateAccessToken(user);
 
-    const refreshToken = jwt.sign(
-      {
-        id: user.id,
-      },
-      process.env.JWT_REFRESH_SECRET,
-      {
-        expiresIn: "7d",
-      },
-    );
+    const refreshToken = generateRefreshToken(user);
 
     res.cookie("refreshToken", refreshToken, {
       ...refreshCookieOptions,
@@ -91,7 +82,6 @@ const loginUser = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     next({
-      status: 500,
       message: "Failed logging in",
     });
   }
@@ -137,7 +127,6 @@ const refreshAccessToken = async (req, res, next) => {
     }
 
     return next({
-      status: 500,
       message: "Failed creating new access token",
     });
   }
