@@ -6,6 +6,7 @@ import {
   findUserByEmail,
   findUserById,
 } from "../models/userModel.js";
+import { generateAccessToken } from "../utils/token.js";
 
 const postUser = async (req, res, next) => {
   try {
@@ -65,17 +66,7 @@ const loginUser = async (req, res, next) => {
       });
     }
 
-    const accessToken = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
-      process.env.JWT_ACCESS_SECRET,
-      {
-        expiresIn: "5m",
-      },
-    );
+    const accessToken = generateAccessToken(user);
 
     const refreshToken = jwt.sign(
       {
@@ -127,17 +118,7 @@ const refreshAccessToken = async (req, res, next) => {
       });
     }
 
-    const accessToken = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
-      process.env.JWT_ACCESS_SECRET,
-      {
-        expiresIn: "5m",
-      },
-    );
+    const accessToken = generateAccessToken(user);
 
     return res.status(200).json({
       message: "New token created",
