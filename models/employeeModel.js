@@ -1,7 +1,15 @@
 import pool from "../config/db.js";
 
-const getAllEmployees = async () => {
-  const [rows] = await pool.query("SELECT * FROM employees");
+const getAllEmployees = async (limit, offset) => {
+  const [rows] = await pool.query(
+    `
+    SELECT * 
+    FROM employees
+    LIMIT ?
+    OFFSET ?
+    `,
+    [limit, offset],
+  );
 
   return rows;
 };

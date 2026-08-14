@@ -8,7 +8,13 @@ import {
 
 const fetchEmployees = async (req, res, next) => {
   try {
-    const employees = await getAllEmployees();
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const offset = (page - 1) * limit;
+
+    const employees = await getAllEmployees(limit, offset);
+
     res.json(employees);
   } catch (error) {
     console.error(error);
