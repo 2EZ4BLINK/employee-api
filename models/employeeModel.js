@@ -68,4 +68,5 @@ export {
   createEmployee,
   updateEmployee,
   deleteEmployee,
+  getEmployeeCount,
 };

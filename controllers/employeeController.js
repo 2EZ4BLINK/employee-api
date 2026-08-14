@@ -4,6 +4,7 @@ import {
   createEmployee,
   updateEmployee,
   deleteEmployee,
+  getEmployeeCount,
 } from "../models/employeeModel.js";
 
 const fetchEmployees = async (req, res, next) => {
@@ -14,8 +15,19 @@ const fetchEmployees = async (req, res, next) => {
     const offset = (page - 1) * limit;
 
     const employees = await getAllEmployees(limit, offset);
+    const totalEmployees = await getEmployeeCount();
 
-    res.json(employees);
+    const totalPages = Math.ceil(totalEmployees / limit);
+
+    return res.status(200).json({
+      employees,
+      pagination: {
+        currentPage: page,
+        limit,
+        totalEmployees,
+        totalPages,
+      },
+    });
   } catch (error) {
     console.error(error);
     next({ message: "Failed getting employees" });
