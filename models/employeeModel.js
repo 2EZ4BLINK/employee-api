@@ -14,6 +14,15 @@ const getAllEmployees = async (limit, offset) => {
   return rows;
 };
 
+const getEmployeeCount = async () => {
+  const [rows] = await pool.query(
+    `SELECT COUNT(*) AS total
+     FROM employees`,
+  );
+
+  return rows[0].total;
+};
+
 const getEmployeeById = async (employeeId) => {
   const [rows] = await pool.query(`SELECT * FROM employees WHERE id = ?`, [
     employeeId,
