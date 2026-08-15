@@ -11,11 +11,12 @@ const fetchEmployees = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
+    const search = req.query.search || "";
 
     const offset = (page - 1) * limit;
 
-    const employees = await getAllEmployees(limit, offset);
-    const totalEmployees = await getEmployeeCount();
+    const employees = await getAllEmployees(limit, offset, search);
+    const totalEmployees = await getEmployeeCount(search);
 
     const totalPages = Math.ceil(totalEmployees / limit);
 
@@ -30,6 +31,8 @@ const fetchEmployees = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
+    console.log("error: ", error);
+
     next({ message: "Failed getting employees" });
   }
 };
