@@ -1,26 +1,29 @@
 import pool from "../config/db.js";
 
-const getAllEmployees = async (limit, offset, search) => {
+const getAllEmployees = async (limit, offset, search, department) => {
   const [rows] = await pool.query(
     `
     SELECT * 
     FROM employees
-    WHERE first_name LIKE ?
+    WHERE first_name LIKE ? 
+    AND (? = '' OR department = ?)
     LIMIT ?
     OFFSET ?
     `,
-    [`%${search}%`, limit, offset],
+    [`%${search}%`, department, department, limit, offset],
   );
 
   return rows;
 };
 
-const getEmployeeCount = async (search) => {
+const getEmployeeCount = async (search, department) => {
   const [rows] = await pool.query(
     `SELECT COUNT(*) AS total
      FROM employees
-     WHERE first_name LIKE ?`,
-    [`%${search}%`],
+     WHERE first_name LIKE ?
+     AND (? = '' OR department = ?)
+     `,
+    [`%${search}%`, department, department],
   );
 
   return rows[0].total;

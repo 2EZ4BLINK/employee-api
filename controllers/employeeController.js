@@ -12,11 +12,12 @@ const fetchEmployees = async (req, res, next) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const search = req.query.search || "";
+    const department = req.query.department || "";
 
     const offset = (page - 1) * limit;
 
-    const employees = await getAllEmployees(limit, offset, search);
-    const totalEmployees = await getEmployeeCount(search);
+    const employees = await getAllEmployees(limit, offset, search, department);
+    const totalEmployees = await getEmployeeCount(search, department);
 
     const totalPages = Math.ceil(totalEmployees / limit);
 
