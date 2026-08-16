@@ -1,16 +1,32 @@
 import pool from "../config/db.js";
 
-const getAllEmployees = async (limit, offset, search, department) => {
+const getAllEmployees = async (
+  limit,
+  offset,
+  search,
+  department,
+  sort,
+  order,
+) => {
+  const allowedSortFields = ["id", "first_name", "department"];
+  const allowedOrders = ["asc", "desc"];
+
+  const sortField = allowedSortFields.includes(sort) ? sort : "id";
+
+  const sortOrder = allowedOrders.includes(order.toLowerCase())
+    ? order.toUpperCase()
+    : "ASC";
+
   const [rows] = await pool.query(
     `
     SELECT * 
     FROM employees
-    WHERE first_name LIKE ? 
-    AND (? = '' OR department = ?)
+    WHERE first_name LIKE CONCAT('%', ?, '%') AND (? = '' OR department = ?)
+    ORDER BY ${sortField} ${sortOrder}
     LIMIT ?
     OFFSET ?
     `,
-    [`%${search}%`, department, department, limit, offset],
+    [search, department, department, limit, offset],
   );
 
   return rows;
@@ -20,10 +36,9 @@ const getEmployeeCount = async (search, department) => {
   const [rows] = await pool.query(
     `SELECT COUNT(*) AS total
      FROM employees
-     WHERE first_name LIKE ?
-     AND (? = '' OR department = ?)
+     WHERE first_name LIKE CONCAT('%', ?, '%') AND (? = '' OR department = ?)
      `,
-    [`%${search}%`, department, department],
+    [search, department, department],
   );
 
   return rows[0].total;
