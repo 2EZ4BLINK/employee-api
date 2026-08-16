@@ -9,31 +9,7 @@ import {
 
 const fetchEmployees = async (req, res, next) => {
   try {
-    const requestedPage = Number(req.query.page);
-    const page =
-      Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
-
-    const requestedLimit = Number(req.query.limit);
-    const limit =
-      Number.isInteger(requestedLimit) &&
-      requestedLimit > 0 &&
-      requestedLimit <= 100
-        ? requestedLimit
-        : 10;
-
-    const search = req.query.search || "";
-    const department = req.query.department || "";
-
-    const allowedSortFields = ["id", "first_name", "department"];
-    const allowedOrders = ["asc", "desc"];
-
-    const sort = allowedSortFields.includes(req.query.sort)
-      ? req.query.sort
-      : "id";
-
-    const order = allowedOrders.includes(req.query.order?.toLowerCase())
-      ? req.query.order.toLowerCase()
-      : "asc";
+    const { page, limit, search, department, sort, order } = req.employeeQuery;
 
     const offset = (page - 1) * limit;
 
@@ -45,6 +21,7 @@ const fetchEmployees = async (req, res, next) => {
       sort,
       order,
     );
+
     const totalEmployees = await getEmployeeCount(search, department);
 
     const totalPages = Math.ceil(totalEmployees / limit);
@@ -60,8 +37,6 @@ const fetchEmployees = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    console.log("error: ", error);
-
     next({ message: "Failed getting employees" });
   }
 };

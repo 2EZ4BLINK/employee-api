@@ -9,10 +9,11 @@ import {
 import { validateEmployee } from "../middleware/validateEmployee.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
+import { validateEmployeeQuery } from "../middleware/validateEmployeeQuery.js";
 
 const router = express.Router();
 
-router.get("/", authenticate, fetchEmployees);
+router.get("/", authenticate, validateEmployeeQuery, fetchEmployees);
 router.get("/:id", authenticate, fetchEmployeeById);
 
 router.post(
