@@ -8,21 +8,12 @@ const getAllEmployees = async (
   sort,
   order,
 ) => {
-  const allowedSortFields = ["id", "first_name", "department"];
-  const allowedOrders = ["asc", "desc"];
-
-  const sortField = allowedSortFields.includes(sort) ? sort : "id";
-
-  const sortOrder = allowedOrders.includes(order.toLowerCase())
-    ? order.toUpperCase()
-    : "ASC";
-
   const [rows] = await pool.query(
     `
     SELECT * 
     FROM employees
     WHERE first_name LIKE CONCAT('%', ?, '%') AND (? = '' OR department = ?)
-    ORDER BY ${sortField} ${sortOrder}
+    ORDER BY ${sort} ${order}
     LIMIT ?
     OFFSET ?
     `,

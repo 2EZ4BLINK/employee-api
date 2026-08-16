@@ -9,12 +9,31 @@ import {
 
 const fetchEmployees = async (req, res, next) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
+    const requestedPage = Number(req.query.page);
+    const page =
+      Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+
+    const requestedLimit = Number(req.query.limit);
+    const limit =
+      Number.isInteger(requestedLimit) &&
+      requestedLimit > 0 &&
+      requestedLimit <= 100
+        ? requestedLimit
+        : 10;
+
     const search = req.query.search || "";
     const department = req.query.department || "";
-    const sort = req.query.sort || "id";
-    const order = req.query.order || "asc";
+
+    const allowedSortFields = ["id", "first_name", "department"];
+    const allowedOrders = ["asc", "desc"];
+
+    const sort = allowedSortFields.includes(req.query.sort)
+      ? req.query.sort
+      : "id";
+
+    const order = allowedOrders.includes(req.query.order?.toLowerCase())
+      ? req.query.order.toLowerCase()
+      : "asc";
 
     const offset = (page - 1) * limit;
 
