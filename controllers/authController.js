@@ -53,7 +53,7 @@ const loginUser = async (req, res, next) => {
     const user = await findUserByEmail(email);
 
     if (!user) {
-      return res.status(404).json({
+      return res.status(401).json({
         message: "Invalid email or password",
       });
     }
@@ -72,6 +72,7 @@ const loginUser = async (req, res, next) => {
 
     res.cookie("refreshToken", refreshToken, {
       ...refreshCookieOptions,
+      path: "/auth",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -133,7 +134,10 @@ const refreshAccessToken = async (req, res, next) => {
 };
 
 const logoutUser = (req, res) => {
-  res.clearCookie("refreshToken", refreshCookieOptions);
+  res.clearCookie("refreshToken", {
+    ...refreshCookieOptions,
+    path: "/auth",
+  });
 
   return res.status(200).json({
     message: "Logout successful",
