@@ -26,7 +26,7 @@ const fetchEmployees = async (req, res, next) => {
 
     const totalPages = Math.ceil(totalEmployees / limit);
 
-    return res.status(200).json({
+    res.status(200).json({
       employees,
       pagination: {
         currentPage: page,
@@ -52,7 +52,7 @@ const fetchEmployeeById = async (req, res, next) => {
       });
     }
 
-    res.json(employees);
+    res.status(200).json(employees);
   } catch (error) {
     console.error(error);
     next({ message: "Failed getting employee" });
