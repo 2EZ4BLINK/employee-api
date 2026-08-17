@@ -29,7 +29,7 @@ const postUser = async (req, res, next) => {
 
     const result = await createUser(userData);
 
-    if (result.affectedRows == 0) {
+    if (result.affectedRows === 0) {
       return res.status(500).json({
         message: "Something went wrong",
       });
