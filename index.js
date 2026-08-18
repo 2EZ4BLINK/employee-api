@@ -2,4 +2,4 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-await import("./app.js");
+await import("./server.js");
