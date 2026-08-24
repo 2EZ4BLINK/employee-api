@@ -59,4 +59,28 @@ describe("POST /auth/login", () => {
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Invalid email or password");
   });
+
+  test("should return 400 when email is missing", async () => {
+    const loginData = {
+      email: "",
+      password: "qwertqwertqwert",
+    };
+
+    const response = await request(app).post("/auth/login").send(loginData);
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Email is required");
+  });
+
+  test("should return 400 when password is missing", async () => {
+    const loginData = {
+      email: "jamesThree@gmail.com",
+      password: "",
+    };
+
+    const response = await request(app).post("/auth/login").send(loginData);
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Password is required");
+  });
 });
