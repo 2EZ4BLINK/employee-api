@@ -87,6 +87,7 @@ describe("POST /auth/login", () => {
 
 describe("POST /auth/signup", () => {
   const testEmail = "testuser123@gmail.com";
+  const existingEmail = "james@gmail.com";
 
   afterEach(async () => {
     await pool.query("DELETE FROM users WHERE email = ?", [testEmail]);
@@ -103,5 +104,18 @@ describe("POST /auth/signup", () => {
 
     expect(response.status).toBe(201);
     expect(response.body.message).toBe("User created successfully");
+  });
+
+  test("should return 409 when email already exists", async () => {
+    const signupData = {
+      name: "Test User",
+      email: existingEmail,
+      password: "qwertqwertqwert",
+    };
+
+    const response = await request(app).post("/auth/signup").send(signupData);
+
+    expect(response.status).toBe(409);
+    expect(response.body.message).toBe("Email already exists");
   });
 });
