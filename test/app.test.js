@@ -166,4 +166,19 @@ describe("POST /auth/refresh", () => {
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("No refresh token");
   });
+
+  test("should create new access token with valid refresh token", async () => {
+    const agent = request.agent(app);
+
+    await agent.post("/auth/login").send({
+      email: "jamesThree@gmail.com",
+      password: "qwertqwertqwert",
+    });
+
+    const response = await agent.post("/auth/refresh");
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("New token created");
+    expect(response.body.accessToken).toBeDefined();
+  });
 });
