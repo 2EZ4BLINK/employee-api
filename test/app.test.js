@@ -86,10 +86,16 @@ describe("POST /auth/login", () => {
 });
 
 describe("POST /auth/signup", () => {
+  const testEmail = "testuser123@gmail.com";
+
+  afterEach(async () => {
+    await pool.query("DELETE FROM users WHERE email = ?", [testEmail]);
+  });
+
   test("should create user successfully with valid data", async () => {
     const signupData = {
       name: "Test User",
-      email: "testuser123@gmail.com",
+      email: testEmail,
       password: "qwertqwertqwert",
     };
 
@@ -97,7 +103,5 @@ describe("POST /auth/signup", () => {
 
     expect(response.status).toBe(201);
     expect(response.body.message).toBe("User created successfully");
-
-    await pool.query("DELETE FROM users WHERE email = ?", [signupData.email]);
   });
 });
