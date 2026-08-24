@@ -93,32 +93,6 @@ describe("POST /auth/signup", () => {
     await pool.query("DELETE FROM users WHERE email = ?", [testEmail]);
   });
 
-  test("should create user successfully with valid data", async () => {
-    const signupData = {
-      name: "Test User",
-      email: testEmail,
-      password: "qwertqwertqwert",
-    };
-
-    const response = await request(app).post("/auth/signup").send(signupData);
-
-    expect(response.status).toBe(201);
-    expect(response.body.message).toBe("User created successfully");
-  });
-
-  test("should return 409 when email already exists", async () => {
-    const signupData = {
-      name: "Test User",
-      email: existingEmail,
-      password: "qwertqwertqwert",
-    };
-
-    const response = await request(app).post("/auth/signup").send(signupData);
-
-    expect(response.status).toBe(409);
-    expect(response.body.message).toBe("Email already exists");
-  });
-
   test("should return 400 when name is missing", async () => {
     const signupData = {
       name: "",
@@ -143,5 +117,44 @@ describe("POST /auth/signup", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("Email is required");
+  });
+
+  test("should return 400 when password is missing", async () => {
+    const signupData = {
+      name: "Test User",
+      email: testEmail,
+      password: "",
+    };
+
+    const response = await request(app).post("/auth/signup").send(signupData);
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Password is required");
+  });
+
+  test("should create user successfully with valid data", async () => {
+    const signupData = {
+      name: "Test User",
+      email: testEmail,
+      password: "qwertqwertqwert",
+    };
+
+    const response = await request(app).post("/auth/signup").send(signupData);
+
+    expect(response.status).toBe(201);
+    expect(response.body.message).toBe("User created successfully");
+  });
+
+  test("should return 409 when email already exists", async () => {
+    const signupData = {
+      name: "Test User",
+      email: existingEmail,
+      password: "qwertqwertqwert",
+    };
+
+    const response = await request(app).post("/auth/signup").send(signupData);
+
+    expect(response.status).toBe(409);
+    expect(response.body.message).toBe("Email already exists");
   });
 });

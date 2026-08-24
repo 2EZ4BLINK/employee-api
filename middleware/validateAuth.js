@@ -4,9 +4,6 @@ export const validateSignup = (req, res, next) => {
   const trimmedName = name?.trim();
   const trimmedEmail = email?.trim();
 
-  req.body.name = trimmedName;
-  req.body.email = trimmedEmail;
-
   if (!trimmedName)
     return res.status(400).json({
       message: "Name is required",
@@ -33,6 +30,9 @@ export const validateSignup = (req, res, next) => {
       message: "Password must be at least 8 characters",
     });
 
+  req.body.name = trimmedName;
+  req.body.email = trimmedEmail;
+
   next();
 };
 
@@ -40,8 +40,6 @@ export const validateLogin = (req, res, next) => {
   const { email, password } = req.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const trimmedEmail = email?.trim();
-
-  req.body.email = trimmedEmail;
 
   if (!trimmedEmail)
     return res.status(400).json({
@@ -63,6 +61,8 @@ export const validateLogin = (req, res, next) => {
     return res.status(400).json({
       message: "Password must be at least 8 characters",
     });
+
+  req.body.email = trimmedEmail;
 
   next();
 };
