@@ -158,3 +158,12 @@ describe("POST /auth/signup", () => {
     expect(response.body.message).toBe("Email already exists");
   });
 });
+
+describe("POST /auth/refresh", () => {
+  test("should return 401 when refresh token is missing", async () => {
+    const response = await request(app).post("/auth/refresh");
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No refresh token");
+  });
+});
