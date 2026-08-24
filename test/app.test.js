@@ -131,4 +131,17 @@ describe("POST /auth/signup", () => {
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("Name is required");
   });
+
+  test("should return 400 when email is missing", async () => {
+    const signupData = {
+      name: "Test User",
+      email: "",
+      password: "qwertqwertqwert",
+    };
+
+    const response = await request(app).post("/auth/signup").send(signupData);
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Email is required");
+  });
 });
