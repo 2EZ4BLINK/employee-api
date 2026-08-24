@@ -118,4 +118,17 @@ describe("POST /auth/signup", () => {
     expect(response.status).toBe(409);
     expect(response.body.message).toBe("Email already exists");
   });
+
+  test("should return 400 when name is missing", async () => {
+    const signupData = {
+      name: "",
+      email: testEmail,
+      password: "qwertqwertqwert",
+    };
+
+    const response = await request(app).post("/auth/signup").send(signupData);
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Name is required");
+  });
 });
