@@ -35,4 +35,28 @@ describe("POST /auth/login", () => {
     expect(response.body.accessToken).toBeDefined();
     expect(response.headers["set-cookie"]).toBeDefined();
   });
+
+  test("should return 401 with wring password", async () => {
+    const loginData = {
+      email: "jamesThree@gmail.com",
+      password: "wrongpassword",
+    };
+
+    const response = await request(app).post("/auth/login").send(loginData);
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid email or password");
+  });
+
+  test("should return 401 when user does not exist", async () => {
+    const loginData = {
+      email: "doesnotexist@gmail.com",
+      password: "qwertqwertqwert",
+    };
+
+    const response = await request(app).post("/auth/login").send(loginData);
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid email or password");
+  });
 });
