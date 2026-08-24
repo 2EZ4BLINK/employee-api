@@ -3,8 +3,12 @@ import request from "supertest";
 
 dotenv.config();
 
-// Load app only AFTER .env is loaded
 const { default: app } = await import("../app.js");
+const { default: pool } = await import("../config/db.js");
+
+afterAll(async () => {
+  await pool.end();
+});
 
 describe("GET /", () => {
   test("should return 200", async () => {
@@ -29,5 +33,6 @@ describe("POST /auth/login", () => {
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("Login successful");
     expect(response.body.accessToken).toBeDefined();
+    expect(response.headers["set-cookie"]).toBeDefined();
   });
 });
