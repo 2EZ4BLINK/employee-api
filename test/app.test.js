@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import request from "supertest";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -186,6 +187,25 @@ describe("POST /auth/refresh", () => {
     const response = await request(app)
       .post("/auth/refresh")
       .set("Cookie", ["refreshToken=fake-token"]);
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid or expired refresh token");
+  });
+
+  test("should return 401 with expired refresh token", async () => {
+    const expiredToken = jwt.sign(
+      {
+        id: 1,
+      },
+      process.env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: "-1s",
+      },
+    );
+
+    const response = await request(app)
+      .post("/auth/refresh")
+      .set("Cookie", [`refreshToken=${expiredToken}`]);
 
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Invalid or expired refresh token");
