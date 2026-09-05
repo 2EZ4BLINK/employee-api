@@ -181,4 +181,13 @@ describe("POST /auth/refresh", () => {
     expect(response.body.message).toBe("New token created");
     expect(response.body.accessToken).toBeDefined();
   });
+
+  test("should return 401 with invalid refresh token", async () => {
+    const response = await request(app)
+      .post("/auth/refresh")
+      .set("Cookie", ["refreshToken=fake-token"]);
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid or expired refresh token");
+  });
 });
