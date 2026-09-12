@@ -280,4 +280,19 @@ describe("GET /employees", () => {
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Invalid or expired token");
   });
+
+  test("should allow request with valid access token", async () => {
+    const loginResponse = await request(app).post("/auth/login").send({
+      email: "jamesThree@gmail.com",
+      password: "qwertqwertqwert",
+    });
+
+    const accessToken = loginResponse.body.accessToken;
+
+    const response = await request(app)
+      .get("/employees")
+      .set("Authorization", `Bearer ${accessToken}`);
+
+    expect(response.status).toBe(200);
+  });
 });
