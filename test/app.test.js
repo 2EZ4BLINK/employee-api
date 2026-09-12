@@ -296,3 +296,21 @@ describe("GET /employees", () => {
     expect(response.status).toBe(200);
   });
 });
+
+describe("POST /employees", () => {
+  test("should return 403 when user is not admin", async () => {
+    const loginResponse = await request(app).post("/auth/login").send({
+      email: "jamesTwo@gmail.com",
+      password: "qwertqwertqwert",
+    });
+
+    const accessToken = loginResponse.body.accessToken;
+
+    const response = await request(app)
+      .post("/employees")
+      .set("Authorization", `Bearer ${accessToken}`);
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe("Forbidden");
+  });
+});
