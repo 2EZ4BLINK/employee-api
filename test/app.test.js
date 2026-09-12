@@ -254,6 +254,12 @@ describe("POST /auth/logout", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("Logout successful");
-    expect(response.headers["set-cookie"]).toBeDefined();
+
+    const cookies = response.headers["set-cookie"];
+
+    expect(cookies).toBeDefined();
+    expect(cookies[0]).toContain("refreshToken=");
+    expect(cookies[0]).toContain("Path=/auth");
+    expect(cookies[0]).toMatch(/Expires=/);
   });
 });
