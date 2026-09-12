@@ -210,4 +210,33 @@ describe("POST /auth/refresh", () => {
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Invalid or expired refresh token");
   });
+
+  test("should return 401 when refresh token user no longer exists", async () => {
+    // Create temporary user
+    const [result] = await pool.query(
+      `INSERT INTO users (name, email, password)
+     VALUES (?, ?, ?)`,
+      ["Deleted User", "deleteduser@test.com", "temporary"],
+    );
+
+    const userId = result.insertId;
+
+    // Create valid refresh token for that user
+    const refreshToken = jwt.sign(
+      { id: userId },
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: "7d" },
+    );
+
+    // Delete the user
+    await pool.query("DELETE FROM users WHERE id = ?", [userId]);
+
+    // Try using their still-valid refresh token
+    const response = await request(app)
+      .post("/auth/refresh")
+      .set("Cookie", `refreshToken=${refreshToken}`);
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("User no longer exists");
+  });
 });
