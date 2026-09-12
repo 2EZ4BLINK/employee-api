@@ -263,3 +263,14 @@ describe("POST /auth/logout", () => {
     expect(cookies[0]).toMatch(/Expires=/);
   });
 });
+
+describe("GET /employees", () => {
+  test("should return 401 when access token is missing", async () => {
+    // Act
+    const response = await request(app).get("/employees");
+
+    // Assert
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Authorization header is missing");
+  });
+});
