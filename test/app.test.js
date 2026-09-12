@@ -266,11 +266,18 @@ describe("POST /auth/logout", () => {
 
 describe("GET /employees", () => {
   test("should return 401 when access token is missing", async () => {
-    // Act
     const response = await request(app).get("/employees");
 
-    // Assert
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Authorization header is missing");
+  });
+
+  test("should return 401 when access token is invalid", async () => {
+    const response = await request(app)
+      .get("/employees")
+      .set("Authorization", "Bearer fake-token");
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid or expired token");
   });
 });
