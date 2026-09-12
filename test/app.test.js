@@ -240,3 +240,20 @@ describe("POST /auth/refresh", () => {
     expect(response.body.message).toBe("User no longer exists");
   });
 });
+
+describe("POST /auth/logout", () => {
+  test("should logout successfully and clear refresh token cookie", async () => {
+    const agent = request.agent(app);
+
+    await agent.post("/auth/login").send({
+      email: "jamesThree@gmail.com",
+      password: "qwertqwertqwert",
+    });
+
+    const response = await agent.post("/auth/logout");
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Logout successful");
+    expect(response.headers["set-cookie"]).toBeDefined();
+  });
+});
